@@ -53,9 +53,9 @@ loginForm.addEventListener('submit', function(e) {
         
         setTimeout(() => {
             if (selectedRole === 'student') {
-                window.location.href = 'studentdash.html';
+                window.location.href = '/studentdash/';
             } else {
-                window.location.href = 'admindash.html';
+                window.location.href = '/admindash/';
             }
         }, 1500);
     } else {
@@ -177,41 +177,3 @@ passwordField.addEventListener('dblclick', function() {
 console.log('Demo Credentials:');
 console.log('Student - Username: student123, Password: student123');
 console.log('Admin - Username: admin, Password: admin123');
-
-
-
-
-// STUDENT DASHBOARD
-
-
-
-const submitBtn = document.querySelector('.btn-submit');
-
-
-submitBtn.addEventListener('click', function(e) {
-    e.preventDefault();
-    
-    
-    const name = document.querySelector('.input-name').value;
-    const mark = document.querySelector('.input-mark').value;
-    const course = document.querySelector('.dropdown-course').value;
-    
-   
-    if (name === '' || mark === '' || course === '') {
-        alert('Please fill in all fields!');
-        return;
-    }
-    
-    
-    alert('Details submitted successfully!\n\nPlease log in again to view the course allotted.');
-    
-    // Optional: Clear the form
-    document.querySelector('.input-name').value = '';
-    document.querySelector('.input-mark').value = '';
-    document.querySelector('.dropdown-course').value = '';
-    
-    
-     setTimeout(function() {
-         window.location.href = 'index.html';
-     }, 1000);
-});

@@ -1,11 +1,12 @@
-<html >
+<!DOCTYPE html>
+<html>
 <head>
     <title>Student Dashboard</title>
     {% load static %}
 
-    <link rel="stylesheet" href="{% static 'style.css' %}">
-    
+    <link rel="stylesheet" href="{% static 'student.css' %}">
 </head>
+
 <body>
     <div class="dashboard-container">
         <header class="dashboard-header">
@@ -13,39 +14,45 @@
         </header>
 
         <main class="dashboard-main">
-            <div class="table-container">
-                <table class="student-table">
-                    <tbody>
-                        <tr>
-                            <td><label>Name</label>
-                                <input type="text" class="input-name" placeholder="Enter name">
-                            </td>
-                            <td><label>Marks</label>
-                                <input type="number" class="input-mark" placeholder="Enter mark">
-                            </td>
-                            <td><label>Select Course</label>
-                                <select class="dropdown-course">
-                                    <option value="">Select Course</option>
-                                    <option value="computer-science">Computer Science</option>
-                                </select>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
 
-            <div class="button-container">
-                <button class="btn-submit">Submit</button>
+            <!-- ✅ FORM START -->
+            <form method="POST">
+                {% csrf_token %}
 
-                <div class="right-section">
-                    <p class="add">New Here?</p>
-                    <button class="btn-add">Add Student</button>
+                <div class="table-container">
+                    <table class="student-table">
+                        <tbody>
+                            <tr>
+                                <td>
+                                    <label>Name</label>
+                                    <input type="text" name="name" placeholder="Enter name" required>
+                                </td>
+
+                                <td>
+                                    <label>Marks</label>
+                                    <input type="number" name="mark" placeholder="Enter mark" required>
+                                </td>
+
+                                <td>
+                                    <label>Select Course</label>
+                                    <select name="course" required>
+                                        <option value="">Select Course</option>
+                                        <option value="Computer Science">Computer Science</option>
+                                    </select>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
-            </div>
+
+                <div class="button-container">
+                    <button type="submit" class="btn-submit">Submit</button>
+                </div>
+
+            </form>
+            <!-- ✅ FORM END -->
+
         </main>
     </div>
-    {% load static %}
-
-    <script src="{% static 'script.js' %}"></script>
 </body>
 </html>
