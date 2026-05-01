@@ -1,0 +1,51 @@
+<html >
+<head>
+    <title>Student Dashboard</title>
+    {% load static %}
+
+    <link rel="stylesheet" href="{% static 'style.css' %}">
+    
+</head>
+<body>
+    <div class="dashboard-container">
+        <header class="dashboard-header">
+            <h1>Student Dashboard</h1>
+        </header>
+
+        <main class="dashboard-main">
+            <div class="table-container">
+                <table class="student-table">
+                    <tbody>
+                        <tr>
+                            <td><label>Name</label>
+                                <input type="text" class="input-name" placeholder="Enter name">
+                            </td>
+                            <td><label>Marks</label>
+                                <input type="number" class="input-mark" placeholder="Enter mark">
+                            </td>
+                            <td><label>Select Course</label>
+                                <select class="dropdown-course">
+                                    <option value="">Select Course</option>
+                                    <option value="computer-science">Computer Science</option>
+                                </select>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="button-container">
+                <button class="btn-submit">Submit</button>
+
+                <div class="right-section">
+                    <p class="add">New Here?</p>
+                    <button class="btn-add">Add Student</button>
+                </div>
+            </div>
+        </main>
+    </div>
+    {% load static %}
+
+    <script src="{% static 'script.js' %}"></script>
+</body>
+</html>

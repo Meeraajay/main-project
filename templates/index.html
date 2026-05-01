@@ -1,0 +1,64 @@
+
+<html>
+<head>
+    <title>Login - Role Selection</title>
+    {% load static %}
+
+    <link rel="stylesheet" href="{% static 'style.css' %}">
+    
+</head>
+<body>
+    <div class="container">
+        <div class="login-box">
+            <h1>Welcome</h1>
+            <p class="subtitle">Please select your role and login</p>
+            
+            <div class="role-selection">
+                <div class="role-option" id="studentRole">
+                    <input type="radio" name="role" id="student" value="student" checked>
+                    <label for="student">
+                        <div class="role-icon">🎓</div>
+                        <span>Student</span>
+                    </label>
+                </div>
+                <div class="role-option" id="adminRole">
+                    <input type="radio" name="role" id="admin" value="admin">
+                    <label for="admin">
+                        <div class="role-icon">👨‍💼</div>
+                        <span>Admin</span>
+                    </label>
+                </div>
+            </div>
+
+            <!-- Login Form -->
+            <form id="loginForm">
+                <div class="input-group">
+                    <label for="username">Username</label>
+                    <input type="text" id="username" name="username" placeholder="Enter your username" required>
+                </div>
+
+                <div class="input-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" name="password" placeholder="Enter your password" required>
+                </div>
+
+                <div class="options">
+                    <label class="remember">
+                        <input type="checkbox" id="remember">
+                        <h5>Remember me</h5>
+                    </label>
+
+                </div>
+
+                <button type="submit" class="login-btn">Login</button>
+            </form>
+
+        
+        </div>
+    </div>
+
+    {% load static %}
+
+<script src="{% static 'script.js' %}"></script>
+</body>
+</html>
