@@ -1,0 +1,118 @@
+
+/* ========================
+   ADMIN PAGE BASE
+======================== */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: #f4f6f9;
+    margin: 0;
+    padding: 30px;
+    color: #333;
+}
+
+/* ========================
+   CONTAINER
+======================== */
+.container {
+    max-width: 900px;
+    margin: auto;
+    background: white;
+    padding: 25px;
+    border-radius: 12px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+}
+
+/* ========================
+   HEADINGS
+======================== */
+h2, h3 {
+    color: #2c3e50;
+    margin-bottom: 15px;
+}
+
+/* ========================
+   INPUTS + SELECT
+======================== */
+input[type="number"],
+select {
+    width: 280px;
+    padding: 10px;
+    margin: 10px 0;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    outline: none;
+    transition: 0.3s;
+}
+
+input:focus,
+select:focus {
+    border-color: #4CAF50;
+    box-shadow: 0 0 5px rgba(76, 175, 80, 0.3);
+}
+
+/* ========================
+   BUTTONS
+======================== */
+button {
+    padding: 10px 18px;
+    margin: 8px 5px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    background: #4CAF50;
+    color: white;
+    font-size: 14px;
+    transition: 0.3s;
+}
+
+button:hover {
+    background: #45a049;
+}
+
+/* secondary button */
+button:nth-of-type(2) {
+    background: #007bff;
+}
+
+button:nth-of-type(2):hover {
+    background: #0069d9;
+}
+
+/* ========================
+   MESSAGE
+======================== */
+#msg,
+#seatMsg {
+    margin-top: 10px;
+    font-weight: bold;
+    color: #2c3e50;
+}
+
+/* ========================
+   TABLE
+======================== */
+table {
+    width: 100%;
+    margin-top: 20px;
+    border-collapse: collapse;
+    background: white;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+th {
+    background: #4CAF50;
+    color: white;
+    padding: 12px;
+    text-align: left;
+}
+
+td {
+    padding: 12px;
+    border-bottom: 1px solid #eee;
+}
+
+tr:hover {
+    background: #f1f1f1;
+}

@@ -162,7 +162,25 @@ h1 {
     transform: translateY(0);
 }
 
+/* Apply Button */
+.apply-btn {
+    display: block;
+    width: 100%;
+    margin-top: 15px;
+    background: #007bff;
+    color: white;
+    padding: 12px;
+    border-radius: 6px;
+    text-align: center;
+    text-decoration: none;
+    font-size: 16px;
+    font-weight: bold;
+    transition: 0.3s;
+}
 
+.apply-btn:hover {
+    background: #0056b3;
+}
 
 /* Responsive Design */
 @media (max-width: 480px) {
@@ -193,16 +211,16 @@ h1 {
 /* ADMIN DASH */
 
 /* Admin Table */
-.admin-table {
+/* .admin-table {
     width: 100%;
     border-collapse: collapse;
     background: white;
     border-radius: 8px;
     overflow: hidden;
     box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-}
+} */
 
-.admin-table th {
+/* .admin-table th {
     background: #67994f;
     color: white;
     padding: 14px 16px;
@@ -221,14 +239,14 @@ h1 {
 }
 
 /* Status Badges */
-.status {
+/* .status {
     padding: 4px 12px;
     border-radius: 20px;
     font-size: 12px;
     font-weight: bold;
-}
+} */
 
-.status-approved {
+/* .status-approved {
     background: #d4edda;
     color: #155724;
 }
@@ -241,10 +259,10 @@ h1 {
 .status-rejected {
     background: #f8d7da;
     color: #721c24;
-}
+} */
 
 /* Action Buttons */
-.btn-view {
+/* .btn-view {
     background: #007bff;
     color: white;
     border: none;
@@ -279,4 +297,4 @@ h1 {
     margin-left: 30px;
     font-size: 14px;
     color: #555;
-}
+} */ 
