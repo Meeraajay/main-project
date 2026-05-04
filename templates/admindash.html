@@ -1,43 +1,67 @@
 <html>
-    <head>
-        <title>Admin Dashboard</title>
-        {% load static %}
-        <link rel="stylesheet" href="{% static 'admin.css' %}">
+<head>
+    <title>Admin Dashboard</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'admin.css' %}">
+</head>
+
+<body>
 
 <div class="container">
-    <h1 style="text-align: center; font-size: 30px;">
-    Admin Dashboard
-    </h1>
-    
 
-    <!-- SELECT COURSE -->
-    <h3>Select Course</h3>
+    <h1>Admin Dashboard</h1>
+
+    <hr>
+
+    <!-- SYSTEM CONTROL -->
+    <h2>System Control</h2>
+
+    <button onclick="setPhase('open')">Open</button>
+    <button onclick="setPhase('allocate')">Allocate</button>
+    <button onclick="setPhase('freeze')">Freeze</button>
+
+    <p id="phaseMsg"></p>
+
+    <hr>
+
+    <!-- CONFIG -->
+    <h3>Course</h3>
     <select id="courseSelect">
-        <option value="Computer Science">Computer Science</option>
-        <option value="Mathematics">Mathematics</option>
-        <option value="Statistics">Statistics</option>
-        <option value="Business Studies">Business Studies</option>
-        <option value="Malayalam">Malayalam</option>
+        <option>Computer Science</option>
+        <option>Mathematics</option>
+        <option>Statistics</option>
+        <option>Business Studies</option>
+        <option>Malayalam</option>
     </select>
 
-    <br><br>
-
-    <!-- SEATS -->
-    <h3>Enter Seats</h3>
-    <input type="number" id="seatInput" placeholder="Enter total seats">
+    <h3>Seats</h3>
+    <input type="number" id="seatInput">
 
     <br><br>
 
-    <!-- ACTION -->
     <button onclick="setCourseAndSeats()">Save Config</button>
-    <button onclick="allocateStudents()">Allocate Students</button>
+    <button onclick="allocateStudents()">Allocate</button>
 
     <p id="msg"></p>
 
     <hr>
 
-    <!-- RESULT -->
+    <!-- ALLOCATION -->
+    <h3>Allocated Students</h3>
     <div id="allocationResult"></div>
 
-    <script src="{% static 'script.js' %}"></script>
+    <hr>
+
+    <!-- PENDING -->
+    <h2>Pending Pool</h2>
+
+    <button onclick="loadPending()">Load Pending</button>
+
+    <div id="pendingBox"></div>
+
 </div>
+
+<script src="{% static 'script.js' %}"></script>
+
+</body>
+</html>

@@ -1,3 +1,5 @@
+console.log("script.js loaded successfully");
+
 
 // ========================
 // ROLE SELECTION UI
@@ -16,6 +18,7 @@ if (roleOptions.length > 0) {
     });
 }
 
+
 // ========================
 // PASSWORD TOGGLE
 // ========================
@@ -26,6 +29,7 @@ if (passwordField) {
         this.type = this.type === 'password' ? 'text' : 'password';
     });
 }
+
 
 // ========================
 // REMEMBER ME (LOAD DATA)
@@ -54,8 +58,9 @@ window.addEventListener('load', function () {
     }
 });
 
+
 // ========================
-// REMEMBER ME (SAVE ON FORM SUBMIT)
+// REMEMBER ME (SAVE ON LOGIN)
 // ========================
 const loginForm = document.getElementById('loginForm');
 
@@ -76,6 +81,7 @@ if (loginForm) {
     });
 }
 
+
 // ========================
 // ANIMATIONS (OPTIONAL)
 // ========================
@@ -95,18 +101,36 @@ style.textContent = `
 document.head.appendChild(style);
 
 
+// ========================
+// CSRF HELPER
+// ========================
+function getCookie(name) {
+    let cookieValue = null;
 
+    if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+
+        for (let cookie of cookies) {
+            cookie = cookie.trim();
+
+            if (cookie.startsWith(name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+
+    return cookieValue;
+}
 
 
 // ========================
-// STORE COURSE + SEATS (MAIN SYSTEM)
+// SET COURSE + SEATS
 // ========================
 function setCourseAndSeats() {
 
     const course = document.getElementById("courseSelect").value;
     const seats = document.getElementById("seatInput").value;
-
-    console.log(course, seats); // debug
 
     fetch("/set-config/", {
         method: "POST",
@@ -119,10 +143,8 @@ function setCourseAndSeats() {
             seats: seats
         })
     })
-    .then(async res => {
-        const data = await res.json();
-        console.log(data); // debug response
-
+    .then(res => res.json())
+    .then(data => {
         document.getElementById("msg").innerText = data.message;
     })
     .catch(err => {
@@ -146,7 +168,17 @@ function allocateStudents() {
     .then(res => res.json())
     .then(data => {
 
-        let html = "<h3>Allocated Students</h3>";
+        let html = "";
+
+        if (data.message) {
+            html += `<p style="color:blue;"><b>${data.message}</b></p>`;
+        }
+
+        if (!data.allocated || data.allocated.length === 0) {
+            document.getElementById("allocationResult").innerHTML = html;
+            return;
+        }
+
         html += "<table border='1' cellpadding='8'>";
         html += "<tr><th>Name</th><th>Marks</th><th>Course</th></tr>";
 
@@ -164,139 +196,145 @@ function allocateStudents() {
 
         document.getElementById("allocationResult").innerHTML = html;
     })
-    .catch(() => {
-        document.getElementById("allocationResult").innerHTML = "Error loading allocation";
+    .catch(err => {
+        console.log(err);
+        document.getElementById("allocationResult").innerHTML =
+            "<p style='color:red;'>Error loading allocation</p>";
     });
 }
 
 
 // ========================
-// CSRF HELPER (KEEP ONLY ONCE)
+// PHASE CONTROL
 // ========================
-function getCookie(name) {
-    let cookieValue = null;
+window.setPhase = function(phase){
 
-    if (document.cookie && document.cookie !== '') {
-        const cookies = document.cookie.split(';');
+    fetch("/set-phase/", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/x-www-form-urlencoded",
+            "X-CSRFToken": getCookie("csrftoken")
+        },
+        body: "phase=" + phase
+    })
+    .then(res => res.json())
+    .then(data => {
+        document.getElementById("phaseMsg").innerText =
+            "Current Phase: " + data.phase;
+    })
+    .catch(err => console.log(err));
+};
 
-        for (let cookie of cookies) {
-            cookie = cookie.trim();
 
-            if (cookie.startsWith(name + '=')) {
-                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                break;
-            }
+// ========================
+// LOAD PENDING CASES
+// ========================
+window.loadPending = function () {
+
+    fetch("/pending-candidates/")
+    .then(res => res.json())
+    .then(data => {
+
+        let box = document.getElementById("pendingBox");
+        box.innerHTML = "";
+
+        let pendingList = data.pending || [];
+        let cutoff = data.cutoff || 0;
+
+        if (pendingList.length === 0) {
+            box.innerHTML = "<p>No pending cases</p>";
+            return;
         }
-    }
 
-    return cookieValue;
+        pendingList.forEach(s => {
+
+            box.innerHTML += `
+                <div style="
+                    border:1px solid #ccc;
+                    padding:15px;
+                    margin:10px;
+                    border-radius:8px;
+                ">
+
+                    <h3>
+                        ${s.name}
+                        ${s.priority === "HIGH" ? "🟢 HIGH PRIORITY" : "🔴 NORMAL"}
+                    </h3>
+
+                    <p><b>Marks:</b> ${s.marks}</p>
+                    <p><b>Cutoff:</b> ${cutoff}</p>
+
+                    ${s.suggestion ? `
+                        <p style="color:green;">
+                            💡 Suggestion: Higher than cutoff student
+                        </p>
+                    ` : ""}
+
+                    <button onclick="decide(${s.id}, 'accept')">Accept</button>
+                    <button onclick="decide(${s.id}, 'reject')">Reject</button>
+                    <button onclick="decide(${s.id}, 'replace')">Replace Lowest</button>
+
+                </div>
+            `;
+        });
+
+    })
+    .catch(err => {
+        console.log("Pending error:", err);
+        document.getElementById("pendingBox").innerHTML =
+            "<p>Error loading pending cases</p>";
+    });
+};
+
+
+// ========================
+// ADMIN DECISION
+// ========================
+function decide(id, action) {
+
+    fetch("/admin-decision/", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            student_id: id,
+            action: action
+        })
+    })
+    .then(res => res.json())
+    .then(data => {
+
+        if (data.message) {
+            alert(data.message);
+        }
+
+        loadPending();
+    })
+    .catch(err => console.log(err));
 }
 
 
-// // ========================
-// // SET TOTAL SEATS (ADMIN)
-// // ========================
-// function setSeats() {
-//     const seats = document.getElementById("seatInput").value;
+window.addEventListener("load", function () {
 
-//     fetch("/set-seats/", {
-//         method: "POST",
-//         headers: {
-//             "Content-Type": "application/json",
-//             "X-CSRFToken": getCookie("csrftoken")
-//         },
-//         body: JSON.stringify({
-//             seats: seats
-//         })
-//     })
-//     .then(res => res.json())
-//     .then(data => {
-//         document.getElementById("seatMsg").innerText = data.message;
-//     })
-//     .catch(() => {
-//         document.getElementById("seatMsg").innerText = "Error saving seats";
-//     });
-// }
+    fetch("/system-state/")
+    .then(res => res.json())
+    .then(data => {
 
-// // CSRF helper (ADD THIS ONLY ONCE in your file)
-// function getCookie(name) {
-//     let cookieValue = null;
+        console.log("Restored state:", data);
 
-//     if (document.cookie && document.cookie !== '') {
-//         const cookies = document.cookie.split(';');
+        // restore phase text
+        document.getElementById("phaseMsg").innerText =
+            "Current Phase: " + data.phase;
 
-//         for (let cookie of cookies) {
-//             cookie = cookie.trim();
+        // restore course
+        if (data.course) {
+            document.getElementById("courseSelect").value = data.course;
+        }
 
-//             if (cookie.startsWith(name + '=')) {
-//                 cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-//                 break;
-//             }
-//         }
-//     }
-
-//     return cookieValue;
-// }
-
-
-
-// // ========================
-// // ALLOCATION (ADMIN)
-// // ========================
-
-// function allocateStudents() {
-//     fetch("/allocate/", {
-//         method: "GET",
-//         headers: {
-//             "X-CSRFToken": getCookie("csrftoken")
-//         }
-//     })
-//     .then(res => res.json())
-//     .then(data => {
-
-//         let html = "<h3>Allocated Students</h3><table border='1'>";
-//         html += "<tr><th>Name</th><th>Marks</th><th>Course</th></tr>";
-
-//         data.allocated.forEach(s => {
-//             html += `
-//                 <tr>
-//                     <td>${s.name}</td>
-//                     <td>${s.marks}</td>
-//                     <td>${s.course}</td>
-//                 </tr>
-//             `;
-//         });
-
-//         html += "</table>";
-
-//         document.getElementById("allocationResult").innerHTML = html;
-//     });
-// }
-
-
-// // ========================
-// // STORE COURSE AND SEAT (ADMIN)
-// // ========================
-
-
-// function setCourseAndSeats() {
-
-//     const course = document.getElementById("courseSelect").value;
-//     const seats = document.getElementById("seatInput").value;
-
-//     fetch("/set-config/", {
-//         method: "POST",
-//         headers: {
-//             "Content-Type": "application/json",
-//             "X-CSRFToken": getCookie("csrftoken")
-//         },
-//         body: JSON.stringify({
-//             course: course,
-//             seats: seats
-//         })
-//     })
-//     .then(res => res.json())
-//     .then(data => {
-//         document.getElementById("msg").innerText = data.message;
-//     });
-// }
+        // restore seats
+        if (data.seats) {
+            document.getElementById("seatInput").value = data.seats;
+        }
+    });
+});
